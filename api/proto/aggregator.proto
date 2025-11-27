@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package aggregator;
+
+option go_package = "github.com/Pavel26ru/aggregator-service/api/proto/aggrpb";
+
+import "google/protobuf/timestamp.proto";
+
+service AggregatorService {
+  rpc GetMax(GetMaxRequest) returns (GetMaxResponse);
+}
+
+message GetMaxRequest {
+  string uuid = 1;
+  google.protobuf.Timestamp from = 2;
+  google.protobuf.Timestamp to = 3;
+}
+
+message MaxValue {
+  string uuid = 1;
+  google.protobuf.Timestamp ts = 2;
+  int64 max_value = 3;
+}
+
+message GetMaxResponse {
+  repeated MaxValue records = 1;
+}
