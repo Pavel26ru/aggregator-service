@@ -10,6 +10,7 @@ import (
 	"github.com/Pavel26ru/aggregator-service/internal/service"
 	grpchandler "github.com/Pavel26ru/aggregator-service/internal/transport/grpc"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 type App struct {
@@ -22,6 +23,7 @@ func New(ctx context.Context, logger *slog.Logger, s *service.Service, address s
 	gRPCServer := grpc.NewServer()
 	handler := grpchandler.NewHandler(s, logger)
 	grpcMaxValue.RegisterAggregatorServiceServer(gRPCServer, handler)
+	reflection.Register(gRPCServer) // Register reflection service
 	return &App{gRPCServer: gRPCServer, logger: logger, address: address}
 }
 

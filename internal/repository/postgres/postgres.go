@@ -64,17 +64,17 @@ func (d *Database) SaveMax(ctx context.Context, rec *model.MaxValueRecord) error
 	return nil
 }
 
-func (d *Database) GetMaxByID(ctx context.Context, uuid string) (*model.MaxValueRecord, error) {
+func (d *Database) GetMaxByID(ctx context.Context, uuid string) (*model.MaxValue, error) {
 	const q = `
-		SELECT uuid, ts, max_value
+		SELECT max_value
 		FROM max_values
 		WHERE uuid = $1
 	`
 
 	row := d.db.QueryRow(ctx, q, uuid)
 
-	var rec model.MaxValueRecord
-	err := row.Scan(&rec.UUID, &rec.Timestamp, &rec.MaxValue)
+	var rec model.MaxValue
+	err := row.Scan(&rec.Value)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, repository.ErrNotFound
@@ -86,9 +86,9 @@ func (d *Database) GetMaxByID(ctx context.Context, uuid string) (*model.MaxValue
 	return &rec, nil
 }
 
-func (r *Database) GetMaxByPeriod(ctx context.Context, from, to time.Time) ([]model.MaxValueRecord, error) {
+func (r *Database) GetMaxByPeriod(ctx context.Context, from, to time.Time) ([]model.MaxValue, error) {
 	const q = `
-		SELECT uuid, ts, max_value
+		SELECT max_value
 		FROM max_values
 		WHERE ts >= $1 AND ts <= $2
 		ORDER BY ts ASC
@@ -101,10 +101,10 @@ func (r *Database) GetMaxByPeriod(ctx context.Context, from, to time.Time) ([]mo
 	}
 	defer rows.Close()
 
-	var records []model.MaxValueRecord
+	var records []model.MaxValue
 	for rows.Next() {
-		var rec model.MaxValueRecord
-		if err := rows.Scan(&rec.UUID, &rec.Timestamp, &rec.MaxValue); err != nil {
+		var rec model.MaxValue
+		if err := rows.Scan(&rec.Value); err != nil {
 			return nil, err
 		}
 		records = append(records, rec)
@@ -113,7 +113,6 @@ func (r *Database) GetMaxByPeriod(ctx context.Context, from, to time.Time) ([]mo
 		r.log.Error("GetMaxByPeriod row iteration failed", slog.Any("error", err))
 		return nil, err
 	}
-
 
 	return records, nil
 }

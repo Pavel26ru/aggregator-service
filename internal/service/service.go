@@ -22,11 +22,11 @@ func (s *Service) SaveMaxValue(ctx context.Context, rec model.MaxValueRecord) er
 	return s.pgxrepo.SaveMax(ctx, &rec)
 }
 
-func (s *Service) GetMaxByID(ctx context.Context, uuid string) (*model.MaxValueRecord, error) {
+func (s *Service) GetMaxByID(ctx context.Context, uuid string) (*model.MaxValue, error) {
 	return s.pgxrepo.GetMaxByID(ctx, uuid)
 }
 
-func (s *Service) GetMaxByPeriod(ctx context.Context, from, to time.Time) ([]model.MaxValueRecord, error) {
+func (s *Service) GetMaxByPeriod(ctx context.Context, from, to time.Time) ([]model.MaxValue, error) {
 	return s.pgxrepo.GetMaxByPeriod(ctx, from, to)
 }
 
@@ -34,11 +34,11 @@ func (s *Service) ComputeMax(values []int64) int64 {
 	if len(values) == 0 {
 		return 0
 	}
-	max := values[0]
+	_max_ := values[0]
 	for _, v := range values[1:] {
-		if v > max {
-			max = v
+		if v > _max_ {
+			_max_ = v
 		}
 	}
-	return max
+	return _max_
 }

@@ -12,6 +12,6 @@ var ErrNotFound = errors.New("not found")
 
 type MaxValueRepository interface {
 	SaveMax(ctx context.Context, rec *model.MaxValueRecord) error
-	GetMaxByID(ctx context.Context, uuid string) (*model.MaxValueRecord, error)
-	GetMaxByPeriod(ctx context.Context, from, to time.Time) ([]model.MaxValueRecord, error)
+	GetMaxByID(ctx context.Context, uuid string) (*model.MaxValue, error)
+	GetMaxByPeriod(ctx context.Context, from, to time.Time) ([]model.MaxValue, error)
 }

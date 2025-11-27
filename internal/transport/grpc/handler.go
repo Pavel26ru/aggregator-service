@@ -10,7 +10,6 @@ import (
 	"github.com/Pavel26ru/aggregator-service/internal/service"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type Handler struct {
@@ -42,9 +41,7 @@ func (h *Handler) GetMax(ctx context.Context, req *pb.GetMaxRequest) (*pb.GetMax
 		return &pb.GetMaxResponse{
 			Records: []*pb.MaxValue{
 				{
-					Uuid:     rec.UUID,
-					Ts:       timestamppb.New(rec.Timestamp),
-					MaxValue: rec.MaxValue,
+					MaxValue: rec.Value,
 				},
 			},
 		}, nil
@@ -68,9 +65,7 @@ func (h *Handler) GetMax(ctx context.Context, req *pb.GetMaxRequest) (*pb.GetMax
 		resp := &pb.GetMaxResponse{}
 		for _, rec := range list {
 			resp.Records = append(resp.Records, &pb.MaxValue{
-				Uuid:     rec.UUID,
-				Ts:       timestamppb.New(rec.Timestamp),
-				MaxValue: rec.MaxValue,
+				MaxValue: rec.Value,
 			})
 		}
 		return resp, nil

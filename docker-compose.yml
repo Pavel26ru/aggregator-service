@@ -70,7 +70,9 @@ services:
         condition: service_healthy
 
   aggregator-service:
-    build: ../../GoTour/aggregator-service
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: aggregator-service
     depends_on:
       postgres:
